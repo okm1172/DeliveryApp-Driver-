@@ -1,3 +1,4 @@
+import 'package:driverapp/screens/car_info_screen.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -57,7 +58,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
         await Fluttertoast.showToast(msg: "Successfully Registered");
 
         AssistMethods.readCurrentOnlineUserInfo();
-        Navigator.push(context,MaterialPageRoute(builder: (c) => MainScreen()));
+        Navigator.push(context,MaterialPageRoute(builder: (c) => CarInfoScreen()));
       }).catchError((errorMessage){
         Fluttertoast.showToast(msg: "Error occured: \n $errorMessage");
       });

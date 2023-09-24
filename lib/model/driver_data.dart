@@ -3,7 +3,7 @@ class DriverData{
   String? name;
   String? phone;
   String? email;
-  String? address;
+  //String? address;
   String? car_color;
   String? car_model;
   String? car_number;
@@ -13,7 +13,7 @@ class DriverData{
     this.name,
     this.phone,
     this.email,
-    this.address,
+    //this.address,
     this.car_color,
     this.car_model,
     this.car_number,

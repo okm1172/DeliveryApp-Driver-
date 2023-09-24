@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:driverapp/global/global.dart';
 import 'package:driverapp/splashScreen/splash_screen.dart';
 
+import '../tabPages/home_tab.dart';
+
 class MainScreen extends StatefulWidget {
   const MainScreen({super.key});
 
@@ -36,7 +38,10 @@ class _MainScreenState extends State<MainScreen> with SingleTickerProviderStateM
 
     return Scaffold(
       body: TabBarView(
-          children: [],
+          children: [
+            HomeTabPage(),
+          ],
+        controller: tabController,
       ),
       bottomNavigationBar: BottomNavigationBar(
           items: [

@@ -33,6 +33,7 @@ class _CarInfoScreenState extends State<CarInfoScreen> {
         "car_model" : carModelTextEditingController.text.trim(),
         "car_number" : carNumberTextEditingController.text.trim(),
         "car_color" : carColorTextEditingController.text.trim(),
+        "type" : selectedCarType,
       };
 
       //Map형태로 firebase에 저장한다.
@@ -229,9 +230,9 @@ class _CarInfoScreenState extends State<CarInfoScreen> {
                                     DropdownButtonFormField(
                                       decoration: InputDecoration(
                                         hintText: 'Please Choose Car Type',
-                                        prefixIcon: Icon(Icons.car_crash, color: darkTheme ? Colors.amber.shade300 : Colors.blue),
+                                        prefixIcon: Icon(Icons.car_crash, color: darkTheme ? Colors.grey : Colors.blue),
                                         filled: true,
-                                        fillColor: darkTheme ? Colors.black : Colors.white,
+                                        fillColor: darkTheme ? Colors.black45 : Colors.grey.shade200,
                                         border: OutlineInputBorder(
                                           borderRadius: BorderRadius.circular(40),
                                           borderSide: BorderSide(
@@ -242,10 +243,12 @@ class _CarInfoScreenState extends State<CarInfoScreen> {
                                       ),
                                       items: carTypes.map((car) {
                                         return DropdownMenuItem(
-                                            child: Text(
-                                              car, style: TextStyle(
-                                                color: Colors.grey),
-                                            )
+                                              child: Text(
+                                                car, style: TextStyle(
+                                                  color: Colors.grey),
+                                            ),
+                                            value: car,
+
                                         );
                                       }).toList(),
                                       //changed된 value가 newvalue에 들어갑니다.
@@ -255,6 +258,8 @@ class _CarInfoScreenState extends State<CarInfoScreen> {
                                         });
                                       },
                                     ),
+
+                                    SizedBox(height: 20),
 
                                     ElevatedButton(
                                         style: ElevatedButton.styleFrom(

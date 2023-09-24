@@ -35,7 +35,7 @@ class _HomeTabPageState extends State<HomeTabPage> {
   LocationPermission? _locationPermission;
 
   String statusText = "Now Offline";
-  Color buttonColor = Colors.grey;
+  Color buttonColor = Colors.amber.shade400;
   bool isDriverActive = false;
 
   locationDriverPosition() async{
@@ -63,7 +63,7 @@ class _HomeTabPageState extends State<HomeTabPage> {
         onlineDriverData.name = (snap.snapshot.value as Map)["name"];
         onlineDriverData.phone = (snap.snapshot.value as Map)["phone"];
         onlineDriverData.email = (snap.snapshot.value as Map)["email"];
-        onlineDriverData.address = (snap.snapshot.value as Map)["address"];
+        //onlineDriverData.address = (snap.snapshot.value as Map)["address"];
         onlineDriverData.car_color = (snap.snapshot.value as Map)["car_details"]["car_color"];
         onlineDriverData.car_number = (snap.snapshot.value as Map)["car_details"]["car_number"];
         onlineDriverData.car_model = (snap.snapshot.value as Map)["car_details"]["car_model"];
@@ -82,6 +82,14 @@ class _HomeTabPageState extends State<HomeTabPage> {
   }
 
   @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    checkIfLocationPermissionAllowed();
+    readCurrentDriverInformation();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Stack(
       children: [
@@ -92,7 +100,7 @@ class _HomeTabPageState extends State<HomeTabPage> {
           zoomGesturesEnabled: true,
           zoomControlsEnabled: true,
           initialCameraPosition: _kGooglePlex,
-          onMapCreated: (controller) {
+          onMapCreated: (GoogleMapController controller) {
             _controllerGooleMap.complete(controller);
 
             newGoogleMapController = controller;
@@ -101,14 +109,14 @@ class _HomeTabPageState extends State<HomeTabPage> {
           },
         ),
         //ui online/offline 버튼구현
-        statusText != "Now Offline" ?
+        statusText != "Now Online" ?
         Container(
             height: MediaQuery.of(context).size.height,
             width: double.infinity,
             color: Colors.black87
         ) : Container(),
         Positioned(
-            top: statusText != "Now Offline" ? MediaQuery.of(context).size.height * 0.45 : 40,
+            top: statusText != "Now Online" ? MediaQuery.of(context).size.height * 0.45 : 60,
             left: 0,
             right : 0,
             child: Row(
@@ -122,31 +130,37 @@ class _HomeTabPageState extends State<HomeTabPage> {
                         setState(() {
                           statusText = "Now Online";
                           isDriverActive = true;
+                          //어느정도 투명하게 나타내줌.
                           buttonColor = Colors.transparent;
                         });
                       } else{
                         driverIsOfflineNow();
                         setState(() {
-                          statusText="Now Offline";
+                          statusText = "Now Offline";
                           isDriverActive = false;
-                          buttonColor = Colors.grey;
+                          buttonColor = Colors.amber.shade400;
                         });
                         Fluttertoast.showToast(msg: "You are Offline Now");
                       }
                     },
                     style: ElevatedButton.styleFrom(
+                      backgroundColor: buttonColor,
                       padding: EdgeInsets.symmetric(horizontal: 18),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(20)
                       ),
                     ),
                     child: statusText!="Now Online"?
+                        //offline
                         Text(statusText,
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white
-                        )) : Icon(
+                            style: TextStyle(
+                             fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.black54
+                           )
+                        ) :
+                      //online
+                      Icon(
                       Icons.phonelink_ring,
                       color: Colors.white,
                       size:26
@@ -154,7 +168,7 @@ class _HomeTabPageState extends State<HomeTabPage> {
                 )
               ],
             )
-        )
+        ),
       ],
     );
   }
@@ -178,7 +192,7 @@ class _HomeTabPageState extends State<HomeTabPage> {
 
   updateDriverLocationAtRealTime(){
     //이걸로 뭘한단건진 모르겠지만 나중가면 알게 되겠죠?
-    streamSubscriptionPosition = Geolocator.getPositionStream().listen((event) {
+    streamSubscriptionPosition = Geolocator.getPositionStream().listen((Position position) {
       if(isDriverActive == true){
         Geofire.setLocation(currentUser!.uid,driverCurrentPosition!.latitude,driverCurrentPosition!.longitude);
       }
@@ -201,8 +215,8 @@ class _HomeTabPageState extends State<HomeTabPage> {
     //Flutter에서는 SystemChannels.platform을 사용하여 네이티브 기능을 호출할 수 있습니다.
     //이 경우에는 "platform" 채널을 통해 invokeMethod를 호출하고,
     //"SystemNavigator.pop"을 인자로 전달하여 앱 종료 동작을 수행합니다.
-    Future.delayed(Duration(milliseconds: 2000),() {
+    /*Future.delayed(Duration(milliseconds: 2000),() {
       SystemChannels.platform.invokeMethod("SystemNavigator.pop");
-    },);
+    },);*/
   }
 }
